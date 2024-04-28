@@ -28,7 +28,7 @@ if(isset($_POST['admin_login'])) {
 		
 		else {
 
-			$sql = "SELECT id_admin, level FROM admins WHERE username='$username' AND password='".md5($password)."'";
+			$sql = "SELECT id_admin, level FROM admins WHERE username='$username' AND password='$password'";
 			$result = $mysqli->query($sql);
 			$record = $result->fetch_array();
 			
