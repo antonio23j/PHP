@@ -7,7 +7,7 @@
 <body>
 
 <body>
-    <center>
+
         <?php
 
 
@@ -298,7 +298,7 @@ if(isset($_POST['add_client'])) {
 	
 ?>
 
-</center>
+
 </body>
 	
 </html> 

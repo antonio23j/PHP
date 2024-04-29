@@ -110,10 +110,32 @@ h6{
 	height: 40px;
 	margin-right: 25px;
 	text-align:center;
-
 }
 
 #top .login:hover{
+	
+	color:#fff;
+	background:#F18C78;
+	
+}
+
+#top .register{
+	
+	display:inline-block;
+	float:right;
+	padding:5px 0px 5px 0px;
+	border:1px solid #F18C78;
+	border-radius:30px;
+	color:#000;
+	text-decoration:none;
+	width:150px;
+	height: 40px;
+	margin-right: 25px;
+	text-align:center;
+
+}
+
+#top .register:hover{
 	
 	color:#fff;
 	background:#F18C78;
@@ -124,7 +146,7 @@ h6{
 	
 	display:block;
 	float:left;
-	width: calc(100% - 283px);
+	width: calc(100% - 450px);
 	position:relative;
 	
 }
@@ -775,58 +797,58 @@ ul.social li:last-child{margin-right:0px;}
 
 
 
-.control {	
-	width:535px;
-	height:auto;
-	display:block;
-	position:relative;
-	margin:50px auto 50px auto; 
-	border-radius:20px;
-	background:#f9e7e3;
-	padding:30px 0px 30px 0px;
-
+.control { 
+    width: 535px;
+    height: auto;
+    display: block;
+    position: relative;
+    margin: 50px auto 50px auto; 
+    border-radius: 20px;
+    background: #f9e7e3;
+    padding: 30px 0px 30px 0px;
 }
 
-.control button{
+.control button {
     width: 175px;
     height: 50px;
     border: none;
-	border-radius:10px;
-    font-family: Calibri, sans-serif;
+    border-radius: 10px;
+    font-family: 'Open Sans', sans-serif;
     font-size: 16px;
-	cursor:pointer;
-	background:black;
-	color:#fff;
-	margin: 30px 0px 0px 180px;
-	display:block;
+    cursor: pointer;
+    background: black;
+    color: #fff;
+    margin: 30px 0px 0px 180px;
+    display: block;
 }
 
-.control input[type=text], input[type=password], input[type=email] {
-  width: 80%;
-  height: 50px;
-  padding: 12px 20px;
-  margin: 25px 0px 8px 55px;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  border-radius:10px;
+.control input[type=text], 
+.control input[type=password], 
+.control input[type=email], 
+.control input[type=tel],
+.control select {
+    width: 80%;
+    height: 50px;
+    padding: 12px 20px;
+    margin: 15px 0px 8px 55px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 10px;
 }
 
 .control p {
-	font-size:2.2em;
-	font-weight:20px;
-	margin: 0px 0px 10px 55px;
-	
+    font-size: 2.2em;
+    font-weight: 20px;
+    margin: 0px 0px 10px 55px;   
 }
 
-.control .sub-label {
-	
-	font-size: 1em;
-	font-weight: 30px;
-	color: #828282;
-	margin-left: 55px;
+.control .sub-label {    
+    font-size: 1em;
+    font-weight: 30px;
+    color: #828282;
+    margin-left: 55px;
 }
-
 
 #clients_table{
 	
