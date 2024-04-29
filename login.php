@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 ini_set('display_errors', 0); // hide PHP notices and errors
 
@@ -11,19 +12,15 @@ if ($mysqli->connect_errno) {
 }
 
 if (isset($_POST['client_login'])) {
-
     if ($_POST['client_login'] == 'yes') {
-
         $email = $_POST['email'];
         $password = $_POST['password'];
 
         if (empty($email) || empty($password)) {
-
             $error_message = '<h3 class="error">Email and password are required</h3>';
         } else {
-
             // Prepare and execute the SQL query to check client credentials
-            $stmt = $mysqli->prepare("SELECT id_client FROM clients WHERE email=? AND password=?");
+            $stmt = $mysqli->prepare("SELECT id_client, name FROM clients WHERE email=? AND password=?");
             $stmt->bind_param("ss", $email, $password);
             $stmt->execute();
             $stmt->store_result();
@@ -31,8 +28,12 @@ if (isset($_POST['client_login'])) {
             if ($stmt->num_rows == 0) {
                 $error_message = '<h3 class="error">Incorrect email or password</h3>';
             } else {
-                // If credentials are correct, redirect to index.html
-                header('location: index.html');
+                // Fetch client's name and store it in session
+                $stmt->bind_result($client_id, $client_name);
+                $stmt->fetch();
+                $_SESSION['client_name'] = $client_name;
+                // Redirect to logged_in.php after successful login
+                header('Location: logged_in.php');
                 exit;
             }
 
@@ -61,7 +62,7 @@ if (isset($_POST['client_login'])) {
 
                 <ul>
                     <li>Ngotot</li>
-                    <li><a href="http://localhost/palestra_ime/">Home</a></li>
+                    <li><a href="index.html">Home</a></li>
                     <li><a href="http://localhost/palestra_ime/#about">About</a></li>
                     <li><a href="http://localhost/palestra_ime/#service">Service</a></li>
                     <li><a href="http://localhost/palestra_ime/#pricing">Pricing</a></li>
