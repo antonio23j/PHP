@@ -2,7 +2,6 @@
 
 ini_set('display_errors', 0); // hide PHP notices and errors
 
-// Connect to the database
 $mysqli = new mysqli("172.17.0.1", "root", "antonio", "palestra");
 
 if ($mysqli->connect_errno) {
@@ -18,16 +17,20 @@ if (isset($_POST['register'])) {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // Validate the form fields
     if (empty($name) || empty($email) || empty($phone) || empty($plan) || empty($password) || empty($confirm_password)) {
         $error_message = '<h3 class="error">All fields are required.</h3>';
     } elseif ($password !== $confirm_password) {
         $error_message = '<h3 class="error">Passwords do not match.</h3>';
     } else {
-        $sql = "INSERT INTO clients (name, email, phone, training_plan, password) VALUES ('$name', '$email', '$phone', '$plan', '$password')";
-        
-        if ($mysqli->query($sql)) {
-            $_SESSION['client_name'] = $name; 
+        // Encrypt the password
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+        // Prepare and execute the SQL query
+        $stmt = $mysqli->prepare("INSERT INTO clients (name, email, phone, training_plan, password) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $name, $email, $phone, $plan, $hashed_password);
+
+        if ($stmt->execute()) {
+            $_SESSION['client_id'] = $name; 
             header("Location: login.php");
             exit();
         } else {
@@ -35,6 +38,7 @@ if (isset($_POST['register'])) {
         }
     }
 }
+
 
 ?>
 
@@ -93,10 +97,6 @@ if (isset($_POST['register'])) {
         <button type="submit">REGISTER</button>
     </form>
 
-</section>
-
-<section id="footer">
-    <!-- Footer content goes here -->
 </section>
 
 </body>

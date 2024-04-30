@@ -3,7 +3,6 @@ session_start();
 
 ini_set('display_errors', 0); // hide PHP notices and errors
 
-// Connect to the database
 $mysqli = new mysqli("172.17.0.1", "root", "antonio", "palestra");
 
 if ($mysqli->connect_errno) {
@@ -11,21 +10,20 @@ if ($mysqli->connect_errno) {
     exit();
 }
 
-if (isset($_SESSION['client_name'])) {
-    $client_name = $_SESSION['client_name'];
+if (isset($_SESSION['client_id'])) {
+    $client_id = $_SESSION['client_id'];    
     
-    // Fetch user's email and training plan from the database
-    $stmt = $mysqli->prepare("SELECT email, training_plan FROM clients WHERE name = ?");
-    $stmt->bind_param("s", $client_name);
+    $stmt = $mysqli->prepare("SELECT name, email, training_plan FROM clients WHERE id_client = ?");
+    $stmt->bind_param("i", $client_id);
     $stmt->execute();
-    $stmt->bind_result($email, $training_plan);
+    $stmt->bind_result($name, $email, $training_plan);
     $stmt->fetch();
     $stmt->close();
 } else {
-    // Redirect to login page if not logged in
     header('Location: login.php');
     exit;
 }
+
 
 if (isset($_POST['logout'])) {
     if ($_POST['logout'] == 'yes') {
@@ -47,42 +45,46 @@ if (isset($_POST['logout'])) {
 
 <body>
 
-    <header id="top">
+    
+<header id="top">
 
-        <div class="main">
+<div class="main">
 
-            <nav class="main-menu">
+    <nav class="main-menu">
 
-                <ul>
-                    <li>OMEGA GYM</li>
-                    <li><a href="#exercise">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#service">Service</a></li>
-                    <li><a href="#trainer">Trainers</a></li>
-                    <li><a href="#footer">Help</a></li>
-                </ul>
+        <ul>
+            <li>OMEGA GYM</li>
+            <li><a href="#exercise">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#service">Service</a></li>
+            <li><a href="#trainer">Trainers</a></li>
+            <li><a href="#footer">Help</a></li>
+        </ul>
 
-            </nav>
+    </nav>
 
-            <div class="profile-info">
-                <span class="logged-in">Logged in as: <?php echo $client_name; ?></span>
-                <div class="profile-details">
-                    <p>Email: <?php echo $email; ?></p>
-                    <p>Training Plan: <?php echo $training_plan; ?></p>
-                </div>
-            </div>
+    <div class="profile-info">
+        <span class="logged-in">Logged in as: <?php echo $name; ?></span>
+        <div class="profile-details">
+            <p>Email: <?php echo $email; ?></p>
+            <p>Training Plan: <?php echo $training_plan; ?></p>
+        </div>
+    </div>
 
-            <form method="post" action="">
+    <form method="post" action="">
                 <input type="hidden" name="logout" value="yes">
                 <button type="submit" class="logout-button">Logout</button>
-            </form>
+    </form>
 
-            <div class="clear"></div>
-        </div>
+    <button onclick="window.location.href='change_password.php'" class="change-password-button">Change Password</button>
 
-        <div class="clear"></div>
 
-    </header>
+    <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+
+</header>
 
     <section id="exercise">
 
@@ -177,8 +179,6 @@ if (isset($_POST['logout'])) {
 
                     <h2> We are the best sports service provider in the world, we always provide pleasant service, coupled with professional and trained instructors</h2>
 
-                    <a href="#contact" class="button">Get Started</a>
-
                 </div>
 
                 <div class="column column45">
@@ -237,6 +237,8 @@ if (isset($_POST['logout'])) {
         </div>
 
     </section>
+
+
 
     <section id="contact">
 

@@ -1,49 +1,3 @@
-<?php
-session_start();
-
-ini_set('display_errors', 0); // hide PHP notices and errors
-
-// Connect to the database
-$mysqli = new mysqli("172.17.0.1", "root", "antonio", "palestra");
-
-if ($mysqli->connect_errno) {
-    echo "Failed to connect to MySQL: " . $mysqli->connect_error;
-    exit();
-}
-
-if (isset($_POST['client_login'])) {
-    if ($_POST['client_login'] == 'yes') {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        if (empty($email) || empty($password)) {
-            $error_message = '<h3 class="error">Email and password are required</h3>';
-        } else {
-            // Prepare and execute the SQL query to check client credentials
-            $stmt = $mysqli->prepare("SELECT id_client, name FROM clients WHERE email=? AND password=?");
-            $stmt->bind_param("ss", $email, $password);
-            $stmt->execute();
-            $stmt->store_result();
-
-            if ($stmt->num_rows == 0) {
-                $error_message = '<h3 class="error">Incorrect email or password</h3>';
-            } else {
-                // Fetch client's name and store it in session
-                $stmt->bind_result($client_id, $client_name);
-                $stmt->fetch();
-                $_SESSION['client_name'] = $client_name;
-                // Redirect to logged_in.php after successful login
-                header('Location: logged_in.php');
-                exit;
-            }
-
-            $stmt->close();
-        }
-    }
-}
-
-?>
-
 <html>
 
 <head>
@@ -86,21 +40,7 @@ if (isset($_POST['client_login'])) {
 
             <input type="hidden" name="client_login" value="yes" />
 
-            <?php
-
-            if ($error_message) {
-                echo $error_message;
-            } else {
-
-            ?>
-
                 <p>Client Login</p>
-
-            <?php
-
-            }
-
-            ?>
 
             <div class="element">
 
@@ -116,18 +56,50 @@ if (isset($_POST['client_login'])) {
 
     </section>
 
-    <section id="footer">
+    <?php
+session_start();
 
-        <div class="grid grid20-20-20-20-20">
+$mysqli = new mysqli("172.17.0.1", "root", "antonio", "palestra");
 
-            <div class="column column20">
+if ($mysqli->connect_errno) {
+    echo "Failed to connect to MySQL: " . $mysqli->connect_error;
+    exit();
+}
 
-                <h4>Ngoto</h4>
+if (isset($_POST['client_login']) && $_POST['client_login'] == 'yes') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-                <ul class="social">
+    if (empty($email) || empty($password)) {
+        $error_message = '<h3 class="error">Email and password are required</h3>';
+    } else {
+        // Prepare SQL statement
+        $stmt = $mysqli->prepare("SELECT id_client, name, password FROM clients WHERE email=?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
 
-                    <li><a href="#"><img src="images/img8.png" /></a></li>
-                    <li><a href="#"><img src="images/img8.png" /></a></li>
-                    <li><a href="#"><img src="images/img8.png" /></a></li>
+        if ($stmt->num_rows == 0) {
+            $error_message = '<h3 class="error">Incorrect email or password</h3>';
+        } else {
+            // Bind result variables
+            $stmt->bind_result($client_id, $client_name, $hashed_password);
+            $stmt->fetch();
 
+            // Verify password
+            if (password_verify($password, $hashed_password)) {
+                $_SESSION['client_id'] = $client_id;
+                header('Location: logged_in.php');
+                exit;
+            } else {
+                $error_message = '<h3 class="error">Incorrect email or password</h3>';
+            }
+        }
+
+        $stmt->close();
+    }
+}
+
+
+?>
       
