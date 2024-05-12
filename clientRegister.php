@@ -2,7 +2,7 @@
 
 ini_set('display_errors', 0); // hide PHP notices and errors
 
-$mysqli = new mysqli("172.17.0.1", "root", "antonio", "palestra");
+$mysqli = new mysqli("127.0.0.1","root", "root","palestra");
 
 if ($mysqli->connect_errno) {
     echo "Failed to connect to MySQL: " . $mysqli->connect_error;
@@ -55,16 +55,6 @@ if (isset($_POST['register'])) {
 
 <header id="top">
     <div class="main">
-        <nav class="main-menu">
-            <ul>
-                <li>Ngotot</li>
-                <li><a href="http://localhost/palestra_ime/">Home</a></li>
-                <li><a href="http://localhost/palestra_ime/#about">About</a></li>
-                <li><a href="http://localhost/palestra_ime/#service">Service</a></li>
-                <li><a href="http://localhost/palestra_ime/#pricing">Pricing</a></li>
-                <li><a href="http://localhost/palestra_ime/#footer">Help</a></li>
-            </ul>
-        </nav>
         <a href="login.php" class="login">Login</a>
     </div>
     <h1> Client Registration </h1>

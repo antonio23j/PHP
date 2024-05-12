@@ -1,3 +1,75 @@
+<?php
+session_start();
+
+$mysqli = new mysqli("127.0.0.1","root", "root","palestra");
+
+
+if ($mysqli->connect_errno) {
+    echo "Failed to connect to MySQL: " . $mysqli->connect_error;
+    exit();
+}
+
+$error_message = "";
+
+
+if (isset($_POST['client_login']) && $_POST['client_login'] == 'yes') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+if (empty($email) || empty($password)) {
+    $error_message = '<h3 class="error">Email and password are required</h3>';
+} else {
+    // Check if the user is an admin
+    $stmt = $mysqli->prepare("SELECT id_admin, password, level FROM admins WHERE email=?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        // If the user is found in admins table, verify the password
+        $stmt->bind_result($admin_id, $admin_password, $admin_level);
+        $stmt->fetch();
+
+        if ($admin_password == $password) {
+            $_SESSION['admin_id'] = $admin_id;
+            $_SESSION['admin_level'] = $admin_level;
+            header('Location: superadmin.php');
+            exit;
+        } else {
+            $error_message = '<h3 class="error">Incorrect password</h3>';
+        }
+    } else {
+        // If not found in admins table, check clients table
+        $stmt = $mysqli->prepare("SELECT id_client, name, password FROM clients WHERE email=?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+            // If found in clients table, verify the password
+            $stmt->bind_result($client_id,$client_name, $hashed_password);
+            $stmt->fetch();
+
+            if (password_verify($password, $hashed_password)) {
+                $_SESSION['client_id'] = $client_id;
+                header('Location: logged_in.php');
+                exit;
+            } else {
+                $error_message = '<h3 class="error">Incorrect password</h3>';
+            }
+        }
+        else {
+            // Email not found in clients table
+            $error_message = '<h3 class="error">Email not found</h3>';
+        }
+    }
+
+    $stmt->close();
+}
+}
+
+?>
+
 <html>
 
 <head>
@@ -10,37 +82,24 @@
 
     <header id="top">
 
-        <div class="main">
-
-            <nav class="main-menu">
-
-                <ul>
-                    <li>Ngotot</li>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="http://localhost/palestra_ime/#about">About</a></li>
-                    <li><a href="http://localhost/palestra_ime/#service">Service</a></li>
-                    <li><a href="http://localhost/palestra_ime/#pricing">Pricing</a></li>
-                    <li><a href="http://localhost/palestra_ime/#footer">Help</a></li>
-                </ul>
-
-            </nav>
-
-            <div class="clear"></div>
-        </div>
-
-        <h1> Client Login </h1>
+        <h1>Login </h1>
 
         <div class="clear"></div>
 
+
     </header>
 
-    <section id="form">
+    <section id="form" class="control">
 
-        <form class="control" method="post">
+    <?php if (!empty($error_message)) echo $error_message; ?>
+    
+
+        <form method="post">
 
             <input type="hidden" name="client_login" value="yes" />
+            
 
-                <p>Client Login</p>
+                <p>Login</p>
 
             <div class="element">
 
@@ -54,52 +113,12 @@
 
         </form>
 
+        <div class="center-a">
+            <form action="clientRegister.php">
+                 <button type="submit" class="register-link">Register</button>
+             </form>
+        </div>
+
     </section>
-
-    <?php
-session_start();
-
-$mysqli = new mysqli("172.17.0.1", "root", "antonio", "palestra");
-
-if ($mysqli->connect_errno) {
-    echo "Failed to connect to MySQL: " . $mysqli->connect_error;
-    exit();
-}
-
-if (isset($_POST['client_login']) && $_POST['client_login'] == 'yes') {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    if (empty($email) || empty($password)) {
-        $error_message = '<h3 class="error">Email and password are required</h3>';
-    } else {
-        // Prepare SQL statement
-        $stmt = $mysqli->prepare("SELECT id_client, name, password FROM clients WHERE email=?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows == 0) {
-            $error_message = '<h3 class="error">Incorrect email or password</h3>';
-        } else {
-            // Bind result variables
-            $stmt->bind_result($client_id, $client_name, $hashed_password);
-            $stmt->fetch();
-
-            // Verify password
-            if (password_verify($password, $hashed_password)) {
-                $_SESSION['client_id'] = $client_id;
-                header('Location: logged_in.php');
-                exit;
-            } else {
-                $error_message = '<h3 class="error">Incorrect email or password</h3>';
-            }
-        }
-
-        $stmt->close();
-    }
-}
-
-
-?>
-      
+</body>
+</html>

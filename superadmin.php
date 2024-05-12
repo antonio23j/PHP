@@ -1,27 +1,34 @@
 <?php
+session_start();
 
-ini_set('display_errors', 0); // hide php notices and errors
+ini_set('display_errors', 1); // hide php notices and errors
 
-if($_COOKIE['logedin']!='superadmin') {
-	?>
-	
-		Ju nuk mund te aksesoni kete faqe! <br/><br/>
-		
-		<a href="./">Shko ne homepage</a>
-	
-	<?php
-	exit;
-} // no access for non-superadmins
+if ($_SESSION['admin_level'] != "admin") {
+
+    header('Location: login.php');
+    exit;
+}
 
 // connect to database
 
-$mysqli = new mysqli("172.17.0.1", "root", "antonio", "palestra");
+$mysqli = new mysqli("127.0.0.1", "root", "root", "palestra");
 
 if ($mysqli -> connect_errno) {
 	
 	echo "Failed to connect to MySQL: " . $mysqli -> connect_error;
 	exit();
 
+}
+
+if (isset($_POST['update'])) {
+    $id = $_POST['id_client'];
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+	$training_plan = $_POST['training_plan'];
+
+    $sql = "UPDATE clients SET name='$name', email='$email', phone='$phone', training_plan='$training_plan' WHERE id_client=$id";
+    $mysqli->query($sql);
 }
 
 ?>
@@ -35,30 +42,7 @@ if ($mysqli -> connect_errno) {
 <body>
 
 <header id="top">
-
-	<div class="main">
-		
-		<nav class="main-menu">
-		
-			<ul>
-
-			    <li>Ngotot</li>
-				<li><a href="http://localhost/palestra_ime/">Home</a></li>
-				<li><a href="http://localhost/palestra_ime/#about">About</a></li>
-				<li><a href="http://localhost/palestra_ime/#service">Service</a></li>
-				<li><a href="http://localhost/palestra_ime/#pricing">Pricing</a></li>
-				<li><a href="http://localhost/palestra_ime/#footer">Help</a></li>
-			
-			</ul>
-		
-		</nav>
-		
-	    <a href="register.php" class="login">Register</a>
-	    
-	
-		<div class="clear"></div>
-	</div>
-	
+	<div>
 	<h1> Klientet e Rregjistruar ne Palester </h1>
 	
 	<div class="clear"></div>
@@ -77,8 +61,9 @@ if ($mysqli -> connect_errno) {
 				<th>Email</th>
 				<th>Phone</th>
 				<th>Training Plan</th>
-				<th>Mesazhi</th>
 				<th>Data Fillimit</th>
+				<th></th>
+				<th></th>
 			</tr>
 		</thead>
 		
@@ -98,8 +83,19 @@ if ($mysqli -> connect_errno) {
 							<td><?=$record['email']?></td>
 							<td><?=$record['phone']?></td>
 							<td><?=$record['training_plan']?></td>
-							<td><?=$record['message']?></td>
 							<td><?=$record['start_date']?></td>
+							<td>
+                                <form method="post" action="add_client.php">
+                                    <input type="hidden" name="id_client" value="<?= $record['id_client'] ?>">
+                                    <input type="submit" name="edit" value="Edit">
+                                </form>
+                            </td>
+                            <td>
+                                <form method="post" action="add_client.php">
+                                    <input type="hidden" name="id_client" value="<?= $record['id_client'] ?>">
+                                    <input type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure you want to delete this client?')">
+                                </form>
+                            </td>
 						</tr>
 					
 					<?php
@@ -111,8 +107,21 @@ if ($mysqli -> connect_errno) {
 		</tbody>
 	
 	</table>
+
+	<form method="post" action="add_client.php">
+                <input type="text" name="name" placeholder="Name">
+                <input type="email" name="email" placeholder="Email">
+                <input type="text" name="phone" placeholder="Phone">
+				<input type="password" name="password" placeholder="Password">
+				<select name="training_plan">
+       				<option value="basic">basic</option>
+        			<option value="premium">premium</option>
+       				<option value="super">super</option>
+   				 </select>
+                <button type="submit" name="add">Add Client</button>
+            </form>
 	
-	<a href="logout.php" class="logout">Logout</a>
+	<a href="index.html" class="logout">Logout</a>
 	
 	<div class="clear"></div>
 	
@@ -127,82 +136,10 @@ if ($mysqli -> connect_errno) {
 
 <div class="grid grid20-20-20-20-20">
 		
-			<div class="column column20">
-			
-			<h4>Ngoto</h4>
-			
-			<ul class="social">
 
-				<li><a href="#"><img src="images/img8.png"/></a></li>
-				<li><a href="#"><img src="images/img8.png"/></a></li>
-				<li><a href="#"><img src="images/img8.png"/></a></li>
-				
-			</ul>
-			
-			</div>
-			
-			<div class="column column20">
-			
-				<h4>Company</h4>
-				
-				<ul class="footer-menu">
-
-					<li><a href="#">About</a></li>
-					<li><a href="#">Career</a></li>
-					<li><a href="#">Partner</a></li>
-					<li><a href="#">Press</a></li>
-					<li><a href="#">Features</a></li>
-
-				</ul>
-			
-			</div>
-			
-			
-			<div class="column column20">
-			
-				<h4>Features</h4>
-				
-				<ul class="footer-menu">
-
-					<li><a href="#">Private</a></li>
-					<li><a href="#">Trainers</a></li>
-					<li><a href="#">Workout</a></li>
-					<li><a href="#">Join</a></li>
-
-				</ul>
-				
-			</div>
-			
-			<div class="column column20">
-			
-				<h4>About us</h4>
-				
-				<ul class="footer-menu">
-				
-					<li><a href="#">Who are we</a></li>
-					<li><a href="#">Privacy</a></li>
-					<li><a href="#">Terms</a></li>
-					<li><a href="#">FA</a></li>
-					
-				</ul>
-				
-			</div>
-			
-			<div class="column column20 last">
-			
-				<h4>Contact</h4>
-				
-				<ul class="footer-menu">
-				
-					<li><a href="#">(684) 555-0102</a></li>
-					<li><a href="#">Ngotot@email.com</a></li>
-					<li><a href="#">4517 Washington </br> Manchester</a></li>
-					
-				</ul>
-				</div>
 			</div>
 		
-		<p>Copyright 2021 - All right.</p>
+		<p>Copyright 2024 - All right.</p>
 				 
 		<div class="clear"></div>
 </section>
