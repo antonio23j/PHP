@@ -30,15 +30,18 @@ if (isset($_POST['change_password'])) {
     $stmt->bind_result($stored_password);
     $stmt->fetch();
     $stmt->close();
-
-    if ($old_password !== $stored_password) {
+ 
+    if (!password_verify($old_password, $stored_password)) {
         $error_message = '<h3 class="error">Incorrect old password</h3>';
     } elseif ($new_password !== $confirm_password) {
         $error_message = '<h3 class="error">New password and confirmation do not match</h3>';
     } else {
+        // Hash the new password
+        $hashed_new_password = password_hash($new_password, PASSWORD_DEFAULT);
+
         // Update the password in the database
         $stmt = $mysqli->prepare("UPDATE clients SET password=? WHERE id_client=?");
-        $stmt->bind_param("si", $new_password, $client_id);
+        $stmt->bind_param("si", $hashed_new_password, $client_id);
         $stmt->execute();
         $stmt->close();
 
