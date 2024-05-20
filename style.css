@@ -168,30 +168,49 @@ h6 {
 
 /* profile info */
 .profile-info {
-  float: right;
-  margin-top: 10px;
-  margin-right: 20px;
+  display: flex; /* Flexbox for layout control */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  padding: 40px; /* Padding around the container */
+  background: #f5f5f5; /* Light gray background for contrast */
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  max-width: 800px; /* Restrict maximum width */
+  margin: 40px auto; /* Center the container on the page */
 }
 
-.profile-info .logged-in {
-  font-size: 14px;
-  font-weight: bold;
-  color: #333;
+.profile-details {
+  background: #ffffff; /* White background for contrast */
+  border: 1px solid #e0e0e0; /* Light border */
+  border-radius: 10px; /* Rounded corners */
+  padding: 20px; /* Space inside the div */
+  width: 100%; /* Full width inside the parent */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  font-family: 'Arial', sans-serif; /* Clean font */
+  color: #333; /* Text color */
 }
 
-.profile-info .profile-details {
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 10px;
-  margin-top: 5px;
+.profile-details p {
+  margin: 10px 0; /* Space between paragraphs */
+  font-size: 16px; /* Font size */
 }
 
-.profile-info .profile-details p {
-  margin: 5px 0;
-  font-size: 12px;
-  color: #555;
+.profile-details p:first-of-type {
+  font-weight: bold; /* Bold the first paragraph */
 }
+
+.profile-details p::before {
+  content: '• '; /* Bullet before each paragraph */
+  color: #d94f3d; /* Bullet color */
+  font-weight: bold; /* Bold bullet */
+}
+
+.profile-details p span {
+  color: #d94f3d; /* Highlighted color for important text */
+  font-weight: bold; /* Bold for important text */
+}
+
+
 
 #top .main-menu {
   display: block;
@@ -202,9 +221,10 @@ h6 {
 
 #top .main-menu ul {
   list-style-type: none;
-  display: block;
-  width: 100%;
+  display: flex;
+  width: 40%;
   max-width: 100%;
+  font-size: 20px;
 }
 
 #top .main-menu ul li {
@@ -829,6 +849,84 @@ ul.social li:last-child {
   margin-left: 55px;
 }
 
+
+.addClient {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f9e7e3;
+  border: 1px solid #000;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.addClient form {
+  display: flex;
+  flex-direction: column;
+}
+
+.addClient form input,
+.addClient form select {
+  margin-bottom: 15px;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.addClient form input:focus,
+.addClient form select:focus {
+  border-color: #a0a0a0;
+  outline: none;
+}
+
+.addClient form button {
+  padding: 12px 20px;
+  background-color: #d9c5c0;
+  border: none;
+  color: #000;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.addClient form button:hover {
+  background-color: #b8a4a0;
+  transform: scale(1.05);
+}
+
+.addClient form button:active {
+  background-color: #a0928f;
+  transform: scale(1);
+}
+
+#clients_table table tbody tr td form input[type="submit"] {
+  padding: 12px 20px;
+  background-color: #f9e7e3;
+  border: none;
+  color: #000;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#clients_table table tbody tr td form input[type="submit"]:hover {
+  background-color: #b8a4a0;
+  transform: scale(1.05);
+}
+
+#clients_table table tbody tr td form input[type="submit"]:active {
+  background-color: #a0928f;
+  transform: scale(1);
+}
+
+.logout:hover {
+  color: #fff;
+  background: #f18c78;
+}
 #clients_table {
   width: 100%;
   min-height: 1px;

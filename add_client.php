@@ -8,7 +8,7 @@ if ($_SESSION['admin_level'] != "admin") {
     exit;
 }
 
-$mysqli = new mysqli("127.0.0.1", "root", "root", "palestra");
+include 'sql.php';
 
 if ($mysqli->connect_errno) {
     echo "Failed to connect to MySQL: " . $mysqli->connect_error;
@@ -75,7 +75,7 @@ if (isset($_POST['edit'])) {
 
     </header>
 
-    <section id="edit_client">
+    <section id="edit_client" class="control">
 
         <div class="main">
 

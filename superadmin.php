@@ -11,7 +11,7 @@ if ($_SESSION['admin_level'] != "admin") {
 
 // connect to database
 
-$mysqli = new mysqli("127.0.0.1", "root", "root", "palestra");
+include 'sql.php';
 
 if ($mysqli -> connect_errno) {
 	
@@ -43,7 +43,7 @@ if (isset($_POST['update'])) {
 
 <header id="top">
 	<div>
-	<h1> Klientet e Rregjistruar ne Palester </h1>
+	<h1> Klientet e Regjistruar ne Palester </h1>
 	
 	<div class="clear"></div>
 
@@ -97,6 +97,7 @@ if (isset($_POST['update'])) {
                                 </form>
                             </td>
 						</tr>
+						
 					
 					<?php
 					
@@ -108,6 +109,7 @@ if (isset($_POST['update'])) {
 	
 	</table>
 
+	<div class="addClient">
 	<form method="post" action="add_client.php">
                 <input type="text" name="name" placeholder="Name">
                 <input type="email" name="email" placeholder="Email">
@@ -120,7 +122,7 @@ if (isset($_POST['update'])) {
    				 </select>
                 <button type="submit" name="add">Add Client</button>
             </form>
-	
+	</div>
 	<a href="index.html" class="logout">Logout</a>
 	
 	<div class="clear"></div>
@@ -131,18 +133,6 @@ if (isset($_POST['update'])) {
 
 </section>
 
-<section id="footer">
-
-
-<div class="grid grid20-20-20-20-20">
-		
-
-			</div>
-		
-		<p>Copyright 2024 - All right.</p>
-				 
-		<div class="clear"></div>
-</section>
 
 </body>
 
